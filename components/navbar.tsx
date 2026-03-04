@@ -118,8 +118,8 @@ export function Navbar() {
                 }
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Contact
-                </NavigationMenuLink>
-              </Link>
+                </Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>

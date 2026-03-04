@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { generateProductPageSEO } from '@/lib/seo';
 import { unslugify } from '@/lib/utils';
 
@@ -58,15 +59,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <nav className="mb-8">
         <ol className="flex items-center space-x-2 text-sm text-gray-500">
           <li>
-            <a href="/" className="hover:text-gray-700">Home</a>
+            <Link href="/" className="hover:text-gray-700">Home</Link>
           </li>
           <li>/</li>
           <li>
-            <a href={`/${category}`} className="hover:text-gray-700">{categoryName}</a>
+            <Link href={`/${category}`} className="hover:text-gray-700">{categoryName}</Link>
           </li>
           <li>/</li>
           <li>
-            <a href={`/${category}/${subCategory}`} className="hover:text-gray-700">{subCategoryName}</a>
+            <Link href={`/${category}/${subCategory}`} className="hover:text-gray-700">{subCategoryName}</Link>
           </li>
           <li>/</li>
           <li className="text-gray-900">{productName}</li>

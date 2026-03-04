@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { generateSubCategoryPageSEO } from '@/lib/seo';
 import { unslugify } from '@/lib/utils';
 
@@ -37,11 +38,11 @@ export default async function SubCategoryPage({ params }: SubCategoryPageProps) 
       <nav className="mb-8">
         <ol className="flex items-center space-x-2 text-sm text-gray-500">
           <li>
-            <a href="/" className="hover:text-gray-700">Home</a>
+            <Link href="/" className="hover:text-gray-700">Home</Link>
           </li>
           <li>/</li>
           <li>
-            <a href={`/${category}`} className="hover:text-gray-700">{categoryName}</a>
+            <Link href={`/${category}`} className="hover:text-gray-700">{categoryName}</Link>
           </li>
           <li>/</li>
           <li className="text-gray-900">{subCategoryName}</li>
@@ -76,12 +77,12 @@ export default async function SubCategoryPage({ params }: SubCategoryPageProps) 
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-xl font-bold text-gray-900">$299.99</span>
-                <a
+                <Link
                   href={`/${category}/${subCategory}/${product}`}
                   className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 transition-colors"
                 >
                   View Details
-                </a>
+                </Link>
               </div>
             </div>
           </div>
