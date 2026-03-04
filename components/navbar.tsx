@@ -52,7 +52,7 @@ const categories = [
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
@@ -69,11 +69,11 @@ export function Navbar() {
               <NavigationMenuItem key={category.title}>
                 <NavigationMenuTrigger>{category.title}</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                  <div className="grid gap-3 p-6 md:w-100 lg:w-125 lg:grid-cols-[.75fr_1fr]">
                     <div className="row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-linear-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                           href={category.href}
                         >
                           <div className="mb-2 mt-4 text-lg font-medium">
@@ -104,15 +104,19 @@ export function Navbar() {
               </NavigationMenuItem>
             ))}
             <NavigationMenuItem>
-              <NavigationMenuLink asChild>
-                <Link href="/about" className={navigationMenuTriggerStyle()}>
-                  About
-                </Link>
-              </NavigationMenuLink>
+              <Link href="/about">
+                {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                }
+                  <Link href="/about" className={navigationMenuTriggerStyle()}>
+                    About
+                  </Link>
+              </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild>
-                <Link href="/contact" className={navigationMenuTriggerStyle()}>
+              <Link href="/contact">
+                {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                }
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Contact
                 </Link>
               </NavigationMenuLink>
