@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { generateCategoryPageSEO } from '@/lib/seo';
 import { unslugify } from '@/lib/utils';
 
@@ -54,12 +55,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <p className="text-gray-600 mb-4">
                 Premium {unslugify(subCategory).toLowerCase()} for arctic conditions.
               </p>
-              <a
+              <Link
                 href={`/${category}/${subCategory}`}
                 className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
               >
                 View Collection
-              </a>
+              </Link>
             </div>
           </div>
         ))}
