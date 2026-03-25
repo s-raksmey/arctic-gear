@@ -1,18 +1,18 @@
 'use client';
 
-import Link from 'next/link';
-import { Menu, ShoppingCart, Search, User } from 'lucide-react';
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import {
+  ChevronDown,
+  Facebook,
+  Instagram,
+  Menu,
+  Search,
+  ShoppingCart,
+  Twitter,
+  User,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useRef, useState } from 'react';
 
 const categories = [
   {
@@ -21,9 +21,15 @@ const categories = [
     description: 'Premium winter clothing for extreme conditions',
     items: [
       { title: 'Winter Jackets', href: '/winter-clothing/winter-jackets' },
-      { title: 'Thermal Underwear', href: '/winter-clothing/thermal-underwear' },
+      {
+        title: 'Thermal Underwear',
+        href: '/winter-clothing/thermal-underwear',
+      },
       { title: 'Snow Pants', href: '/winter-clothing/snow-pants' },
-      { title: 'Winter Accessories', href: '/winter-clothing/winter-accessories' },
+      {
+        title: 'Winter Accessories',
+        href: '/winter-clothing/winter-accessories',
+      },
     ],
   },
   {
@@ -51,105 +57,182 @@ const categories = [
 ];
 
 export function Navbar() {
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMouseEnter = (title: string) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpenCategory(title);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpenCategory(null);
+    }, 100);
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">AG</span>
-          </div>
-          <span className="font-bold text-xl">Arctic Gear</span>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
-            {categories.map((category) => (
-              <NavigationMenuItem key={category.title}>
-                <NavigationMenuTrigger>{category.title}</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="grid gap-3 p-6 md:w-100 lg:w-125 lg:grid-cols-[.75fr_1fr]">
-                    <div className="row-span-3">
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-linear-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                          href={category.href}
-                        >
-                          <div className="mb-2 mt-4 text-lg font-medium">
-                            {category.title}
-                          </div>
-                          <p className="text-sm leading-tight text-muted-foreground">
-                            {category.description}
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </div>
-                    <div className="grid gap-1">
-                      {category.items.map((item) => (
-                        <NavigationMenuLink key={item.title} asChild>
-                          <Link
-                            href={item.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          >
-                            <div className="text-sm font-medium leading-none">
-                              {item.title}
-                            </div>
-                          </Link>
-                        </NavigationMenuLink>
-                      ))}
-                    </div>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            ))}
-            <NavigationMenuItem>
-              <Link href="/about">
-                {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
-                }
-                  <Link href="/about" className={navigationMenuTriggerStyle()}>
-                    About
-                  </Link>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/contact">
-                {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
-                }
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Contact
-                </Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-
-        {/* Right side actions */}
-        <div className="flex items-center space-x-2">
-          {/* Search */}
-          <Button variant="ghost" size="icon" className="hidden md:flex">
-            <Search className="h-5 w-5" />
-            <span className="sr-only">Search</span>
-          </Button>
-
-          {/* User Account */}
-          <Button variant="ghost" size="icon">
-            <User className="h-5 w-5" />
-            <span className="sr-only">Account</span>
-          </Button>
-
-          {/* Shopping Cart */}
-          <Button variant="ghost" size="icon">
-            <ShoppingCart className="h-5 w-5" />
-            <span className="sr-only">Shopping Cart</span>
-          </Button>
-
-          {/* Mobile Menu */}
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Menu</span>
-          </Button>
+    <header className="fixed left-1/2 top-4 z-50 w-[95%] max-w-7xl -translate-x-1/2">
+      <div className="relative">
+        {/* Top Bar with Social Media Icons - Inside the main container */}
+        <div className="mb-2 flex items-center justify-end gap-4 px-2">
+          <span className="text-xs text-white/50">Join our community</span>
+          <Link
+            href="https://twitter.com"
+            target="_blank"
+            className="rounded-full p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <Twitter className="h-4 w-4" />
+          </Link>
+          <Link
+            href="https://facebook.com"
+            target="_blank"
+            className="rounded-full p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <Facebook className="h-4 w-4" />
+          </Link>
+          <Link
+            href="https://instagram.com"
+            target="_blank"
+            className="rounded-full p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <Instagram className="h-4 w-4" />
+          </Link>
         </div>
+
+        {/* Main Navbar Bar */}
+        <div className="flex h-16 items-center justify-between rounded-2xl border border-white/10 bg-white/10 px-6 shadow-lg backdrop-blur-xl">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3">
+            <div className="bg-linear-to-br flex h-9 w-9 items-center justify-center rounded-full from-blue-500 to-cyan-400 shadow-md">
+              <span className="text-sm font-bold text-white">AG</span>
+            </div>
+            <span className="text-lg font-semibold tracking-wide text-white">
+              Arctic Accessories
+            </span>
+          </Link>
+
+          {/* Navigation */}
+          <nav className="hidden items-center gap-1 md:flex">
+            {categories.map(category => (
+              <div
+                key={category.title}
+                onMouseEnter={() => handleMouseEnter(category.title)}
+                onMouseLeave={handleMouseLeave}
+                className="relative"
+              >
+                <button
+                  className={`flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium text-white transition-all hover:bg-white/10 ${
+                    openCategory === category.title ? 'bg-white/10' : ''
+                  }`}
+                >
+                  {category.title}
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                      openCategory === category.title ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+              </div>
+            ))}
+
+            <Link
+              href="/about"
+              className="px-4 py-2 text-sm font-medium text-white transition hover:text-blue-300"
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
+              className="px-4 py-2 text-sm font-medium text-white transition hover:text-blue-300"
+            >
+              Contact
+            </Link>
+          </nav>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10"
+            >
+              <User className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10"
+            >
+              <ShoppingCart className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10 md:hidden"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Full-width Dropdown */}
+        {openCategory && (
+          <div
+            onMouseEnter={() => {
+              if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            }}
+            onMouseLeave={handleMouseLeave}
+            className="animate-in fade-in slide-in-from-top-2 absolute left-0 right-0 top-[calc(100%+6px)] rounded-2xl border border-white/10 bg-white/10 shadow-lg backdrop-blur-xl duration-150"
+          >
+            {categories
+              .filter(c => c.title === openCategory)
+              .map(category => (
+                <div key={category.title} className="p-6">
+                  {/* Header */}
+                  <div className="mb-4 border-b border-white/10 pb-4">
+                    <Link
+                      href={category.href}
+                      onClick={() => setOpenCategory(null)}
+                      className="group inline-flex flex-col"
+                    >
+                      <span className="text-base font-semibold text-white transition-colors group-hover:text-blue-300">
+                        {category.title}
+                      </span>
+                      <span className="text-sm text-white/50">
+                        {category.description}
+                      </span>
+                    </Link>
+                  </div>
+
+                  {/* Items — pipe separated, no border */}
+                  <div className="flex items-center">
+                    {category.items.map((item, index) => (
+                      <div key={item.title} className="flex items-center">
+                        <Link
+                          href={item.href}
+                          onClick={() => setOpenCategory(null)}
+                          className="px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:text-white"
+                        >
+                          {item.title}
+                        </Link>
+                        {index < category.items.length - 1 && (
+                          <span className="select-none text-white/20">|</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+          </div>
+        )}
       </div>
     </header>
   );

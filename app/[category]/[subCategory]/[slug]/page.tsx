@@ -1,21 +1,22 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
 import { generateProductPageSEO } from '@/lib/seo';
 import { unslugify } from '@/lib/utils';
+import { Check, ChevronRight, Heart, ShoppingCart } from 'lucide-react';
+import { Metadata } from 'next';
+import Link from 'next/link';
 
 interface ProductPageProps {
-  params: Promise<{
-    category: string;
-    subCategory: string;
-    slug: string;
-  }>;
+  params: Promise<{ category: string; subCategory: string; slug: string }>;
 }
 
-export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ProductPageProps): Promise<Metadata> {
   const { category, subCategory, slug } = await params;
-  const categoryName = unslugify(category);
-  const subCategoryName = unslugify(subCategory);
-  return generateProductPageSEO(categoryName, subCategoryName, slug);
+  return generateProductPageSEO(
+    unslugify(category),
+    unslugify(subCategory),
+    slug
+  );
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
@@ -24,7 +25,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const subCategoryName = unslugify(subCategory);
   const productName = unslugify(slug);
 
-  // Mock product data - replace with your actual data fetching logic
   const product = {
     name: productName,
     price: 299.99,
@@ -39,12 +39,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
       'Lifetime warranty',
     ],
     specifications: {
-      'Material': 'High-tech synthetic blend',
-      'Insulation': 'Premium down alternative',
-      'Weight': '1.2 kg',
+      Material: 'High-tech synthetic blend',
+      Insulation: 'Premium down alternative',
+      Weight: '1.2 kg',
       'Temperature Rating': '-40°C to -10°C',
-      'Sizes': 'XS, S, M, L, XL, XXL',
-      'Colors': 'Arctic Blue, Glacier White, Storm Gray',
+      Sizes: 'XS, S, M, L, XL, XXL',
+      Colors: 'Arctic Blue, Glacier White, Storm Gray',
     },
     images: [
       '/product-image-1.jpg',
@@ -53,112 +53,148 @@ export default async function ProductPage({ params }: ProductPageProps) {
     ],
   };
 
+  const savings = (product.originalPrice - product.price).toFixed(2);
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Breadcrumb */}
-      <nav className="mb-8">
-        <ol className="flex items-center space-x-2 text-sm text-gray-500">
-          <li>
-            <Link href="/" className="hover:text-gray-700">Home</Link>
-          </li>
-          <li>/</li>
-          <li>
-            <Link href={`/${category}`} className="hover:text-gray-700">{categoryName}</Link>
-          </li>
-          <li>/</li>
-          <li>
-            <Link href={`/${category}/${subCategory}`} className="hover:text-gray-700">{subCategoryName}</Link>
-          </li>
-          <li>/</li>
-          <li className="text-gray-900">{productName}</li>
-        </ol>
-      </nav>
+    <main className="min-h-screen bg-[#0a0f1a] pb-20 pt-28">
+      {/* Ambient glow */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
+        <div className="bg-cyan-500/8 absolute right-1/4 top-1/2 h-80 w-80 rounded-full blur-3xl" />
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Product Images */}
-        <div className="space-y-4">
-          <div className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
-            <span className="text-gray-500">Main Product Image</span>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            {product.images.map((_, index) => (
-              <div key={index} className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-500 text-xs">Image {index + 1}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="relative mx-auto max-w-7xl px-6">
+        {/* Breadcrumb */}
+        <nav className="mb-10 flex items-center gap-2 text-sm text-white/40">
+          <Link href="/" className="transition-colors hover:text-white/70">
+            Home
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5" />
+          <Link
+            href={`/${category}`}
+            className="transition-colors hover:text-white/70"
+          >
+            {categoryName}
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5" />
+          <Link
+            href={`/${category}/${subCategory}`}
+            className="transition-colors hover:text-white/70"
+          >
+            {subCategoryName}
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5" />
+          <span className="text-white/70">{productName}</span>
+        </nav>
 
-        {/* Product Details */}
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {product.name}
-            </h1>
-            <p className="text-sm text-gray-500">
-              {categoryName} → {subCategoryName}
-            </p>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+          {/* Images */}
+          <div className="space-y-4">
+            {/* Main image */}
+            <div className="border-white/8 flex aspect-square items-center justify-center overflow-hidden rounded-2xl border bg-white/5 backdrop-blur-sm">
+              <span className="text-white/20">Main Product Image</span>
+            </div>
+            {/* Thumbnails */}
+            <div className="grid grid-cols-3 gap-4">
+              {product.images.map((_, index) => (
+                <div
+                  key={index}
+                  className="border-white/8 flex aspect-square cursor-pointer items-center justify-center overflow-hidden rounded-xl border bg-white/5 transition-all hover:border-white/20"
+                >
+                  <span className="text-xs text-white/20">
+                    Image {index + 1}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <span className="text-3xl font-bold text-gray-900">
-              ${product.price}
-            </span>
-            {product.originalPrice && (
-              <span className="text-xl text-gray-500 line-through">
+          {/* Details */}
+          <div className="space-y-7">
+            {/* Title */}
+            <div>
+              <p className="mb-2 text-sm font-medium uppercase tracking-widest text-blue-400">
+                {categoryName} · {subCategoryName}
+              </p>
+              <h1 className="text-4xl font-bold tracking-tight text-white">
+                {product.name}
+              </h1>
+            </div>
+
+            {/* Price */}
+            <div className="flex items-center gap-4">
+              <span className="text-4xl font-bold text-white">
+                ${product.price}
+              </span>
+              <span className="text-xl text-white/30 line-through">
                 ${product.originalPrice}
               </span>
-            )}
-            <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-sm font-medium">
-              Save ${(product.originalPrice! - product.price).toFixed(2)}
-            </span>
+              <span className="rounded-lg bg-blue-500/15 px-2.5 py-1 text-sm font-medium text-blue-400">
+                Save ${savings}
+              </span>
+            </div>
+
+            {/* Description */}
+            <p className="leading-relaxed text-white/50">
+              {product.description}
+            </p>
+
+            {/* Features */}
+            <div>
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-white/40">
+                Key Features
+              </h3>
+              <ul className="space-y-2.5">
+                {product.features.map((feature, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center gap-3 text-sm text-white/70"
+                  >
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500/15">
+                      <Check className="h-3 w-3 text-blue-400" />
+                    </span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="space-y-3 pt-2">
+              <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 py-3.5 text-sm font-semibold text-white transition-all hover:bg-blue-400 active:scale-[0.99]">
+                <ShoppingCart className="h-4 w-4" />
+                Add to Cart — ${product.price}
+              </button>
+              <button className="hover:bg-white/8 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-3.5 text-sm font-semibold text-white/70 transition-all hover:text-white">
+                <Heart className="h-4 w-4" />
+                Add to Wishlist
+              </button>
+            </div>
           </div>
+        </div>
 
-          <p className="text-gray-600 leading-relaxed">
-            {product.description}
-          </p>
-
-          {/* Features */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Key Features</h3>
-            <ul className="space-y-2">
-              {product.features.map((feature, index) => (
-                <li key={index} className="flex items-center text-gray-600">
-                  <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Add to Cart Button */}
-          <div className="space-y-4">
-            <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-              Add to Cart - ${product.price}
-            </button>
-            <button className="w-full border border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
-              Add to Wishlist
-            </button>
+        {/* Specifications */}
+        <div className="mt-20">
+          <h2 className="mb-6 text-2xl font-bold text-white">Specifications</h2>
+          <div className="border-white/8 rounded-2xl border bg-white/5 p-6 backdrop-blur-sm">
+            <dl className="grid grid-cols-1 gap-px md:grid-cols-2">
+              {Object.entries(product.specifications).map(
+                ([key, value], index) => (
+                  <div
+                    key={key}
+                    className="flex flex-col gap-1 border-b border-white/5 py-4 last:border-0 md:px-4"
+                  >
+                    <dt className="text-xs font-semibold uppercase tracking-widest text-white/30">
+                      {key}
+                    </dt>
+                    <dd className="text-sm text-white/70">{value}</dd>
+                  </div>
+                )
+              )}
+            </dl>
           </div>
         </div>
       </div>
-
-      {/* Specifications */}
-      <div className="mt-16">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Specifications</h2>
-        <div className="bg-gray-50 rounded-lg p-6">
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(product.specifications).map(([key, value]) => (
-              <div key={key} className="border-b border-gray-200 pb-2">
-                <dt className="font-semibold text-gray-900">{key}</dt>
-                <dd className="text-gray-600">{value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </div>
-    </div>
+    </main>
   );
 }
